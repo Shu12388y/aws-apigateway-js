@@ -30,4 +30,5 @@ const decryption='4c2bf61d4220dbe33fe544b6360acd9ef24c9eb61493fb91311b48000d5e2f
 let decrypt=dicipher.update(decryption,'hex','utf8')
 decrypt+=dicipher.final('utf8')
 console.log(decrypt)
+// Welcome to use cipher
 
