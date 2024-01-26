@@ -24,3 +24,28 @@ functions:
           path: math/checksum
           method: post
           cors: true
+  mulitple:
+    handler: multiple.multiple
+    events:
+      - http:
+          path: math/multiple
+          method: post
+          cors: true  
+          integration: lambda
+          request:
+              template:
+                  application/json: >
+                        #set($inputRoot = $input.path('$') )
+                        {
+                          "num1": $inputRoot.input.operand1,
+                          "num2": $inputRoot.input.operand2
+                        }
+          response:
+              headers:
+                  Access-Control-Allow-Origin: "'*'"
+                  Content-Type: "'applicatiom/json'"
+              template: >
+                  #set($inputRoot = $input.path('$'))
+                  {
+                    "result":$inputRoot
+                  }
