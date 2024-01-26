@@ -1,0 +1,10 @@
+AWSTemplateFormatVersion: '2024-01-26'
+Transform: AWS::Serverless::2024-01-26
+Description: Hello world with SAM
+# global variable
+
+Globals:
+  Functions:
+    MemorySize: 128
+    Runtime: nodejs18.X
+    Timeout: 5
