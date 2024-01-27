@@ -1,0 +1,19 @@
+
+
+service: codecommit
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: ap-south-1
+
+functions:
+  hello:
+    handler: handler.logger
+    events:
+      - http:
+          path: message
+          method: get
+          cors: true
