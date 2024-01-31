@@ -17,7 +17,7 @@ let data=[
 
 
 
-exports  const handler=async(event)=>{
+export const handler=async(event)=>{
 	
 let randomNumber=Math.floor(Math.random()*data.length);
 

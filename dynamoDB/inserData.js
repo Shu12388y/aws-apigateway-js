@@ -273,5 +273,5 @@ dynamodbMethod.batchGet({
 
 
 
-// pagination in dynamodb
+
 
