@@ -1,0 +1,16 @@
+
+
+service: restapi
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: ap-south-1
+
+
+
+functions:
+  hello:
+    handler: handler.hello
