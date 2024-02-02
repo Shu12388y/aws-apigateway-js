@@ -1,5 +1,21 @@
 service: restapi
 frameworkVersion: "3"
+plugins: 
+  - serverless-offline
+
+# custom header
+custom:
+  allowHeaders:
+    - Accept
+    - Content-Type
+    - Content-Length
+    - Authorization
+    - X-Amz-Date
+    - X-Api-Key
+    - X-Amz-Security-Token
+    - X-Amz-User-Agent
+    - app_user_id
+    - app_user_name
 
 provider:
   name: aws
@@ -11,6 +27,26 @@ provider:
   endpointType: regional
   environment:
     NOTES_TABLE: restapi-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:PustItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self.provider.environement.NOTES_TABLE}"      
+
+functions:
+  add-note:
+    handler: api/addNote.handler
+  get-note:
+    handler: api/getNote.handler
+  get-notes:
+    handler: api/getNotes.handler
+  delete-note:
+    handler: api/deleteNote.handler
+  update-note:
+    handler: api/updateNote.handler
+
 
 resources:
   Resources:
