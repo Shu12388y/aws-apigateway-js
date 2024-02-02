@@ -7,8 +7,7 @@ AWS.config.update({
 
 
 const utils = require("./utils.js");
-const moment = require("moment")
-const {v4} = require("uuid")
+const moment = require("moment");
 
 
 // create a dynamodb client
