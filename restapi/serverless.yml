@@ -1,5 +1,3 @@
-
-
 service: restapi
 frameworkVersion: "3"
 
@@ -11,20 +9,38 @@ provider:
   memorySize: 128
   timeOut: 5
   endpointType: regional
-  environment: 
-      NOTE_TABLE: ${self:service}-${opt-stage , self:provider.stage}
-
+  environment:
+    NOTES_TABLE: restapi-${self:provider.stage}
 
 resources:
   Resources:
-    NoteTable: 
+    NotesTable:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:provider.environment.NOTES_TABLE}  
-
-
-
-functions:
-  hello:
-    handler: 
+        TableName: ${self:provider.environment.NOTES_TABLE}
+        AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: N
+          - AttributeName: note_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user_id
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: note_id-index
+            KeySchema:
+              - AttributeName: note_id
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
