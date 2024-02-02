@@ -17,40 +17,18 @@ const table_name = process.env.NOTES_TABLE;
 
 exports.handler = async (event, _context) => {
     try {
-      const note_id = decodeURIComponent(event.pathParameter.note_id);
       
-      const params={
-        TableName:table_name,
-        IndexName:"note_id-index",
-        KeyConditionExpression:"note_id = :note_id",
-        ExpressionAttributeValue:{
-            ":note_id":note_id
-        },
-        Limit:1
-      };
+        const timeStamp = parseInt(event.pathParameters.timestamp)
+        
+        const params={
+            TableName:table_name,
+            Key:{
+                user_id:utils.getUserId(event.headers),
+                timestamp:timeStamp
+            }
 
-
-      const getNote = await db.query(params).promise();
-
-    if (!_.isEmpty(getNote.Items)) {
-        return {
-                statusCode: 200,
-                headers: utils.getHeaders(),
-                body: JSON.stringify(getNote.Items[0])
-
-        };
-
-    }
-    else{
-        return{
-            statusCode:404,
-            headers:utils.getHeaders(),
-            body:JSON.stringify("No Element")
         }
-
-      }
-
-       
+       await db.delete(params).promise()
 
     } catch (error) {
         return {
