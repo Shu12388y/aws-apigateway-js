@@ -7,7 +7,7 @@ AWS.config.update({
 
 
 const utils = require("./utils.js");
-
+const _ = require("underscore")
 
 // create a dynamodb client
 const db = new AWS.DynamoDB.DocumentClient();
@@ -17,41 +17,40 @@ const table_name = process.env.NOTES_TABLE;
 
 exports.handler = async (event, _context) => {
     try {
-        const query = event.queryStringParameters;
-        const limit = query && query.limit ? parseInt(query.limit) : 5;
-        const user_id = utils.getUserId(event.headers);
-
-        const params = {
-            TableName: table_name,
-            keyconditionExpression: '#k = :k',
-            ExpressionAttributeValue: {
-                ":k": user_id
-            },
-            Limit: limit,
-            ScanIndexForward: false
-        }
-
-        const startTimeStamp = query && query.start ? parseInt(query.start) : 0
-
-        if (startTimeStamp > 0) {
-            params.ExclusiveStartKey = {
-                user_id,
-                timestamp: startTimeStamp
-            }
-        }
+      const note_id = decodeURIComponent(event.pathParameter.note_id);
+      
+      const params={
+        TableName:table_name,
+        IndexName:"note_id-index",
+        KeyConditionExpression:"note_id = :note_id",
+        ExpressionAttributeValue:{
+            ":note_id":note_id
+        },
+        Limit:1
+      };
 
 
-        const getNotes = await db.query(params).promise();
+      const getNote = await db.query(params).promise();
 
-
-
-
+    if (!_.isEmpty(getNote.Items)) {
         return {
-            statusCode: 200,
-            headers: utils.getHeaders(),
-            body: JSON.stringify(getNotes)
+                statusCode: 200,
+                headers: utils.getHeaders(),
+                body: JSON.stringify(getNote.Items[0])
 
+        };
+
+    }
+    else{
+        return{
+            statusCode:404,
+            headers:utils.getHeaders(),
+            body:JSON.stringify("No Element")
         }
+
+      }
+
+       
 
     } catch (error) {
         return {
