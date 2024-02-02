@@ -1,4 +1,4 @@
-// get notes function
+// delete notes function
 
 const AWS = require("aws-sdk");
 AWS.config.update({
@@ -28,7 +28,12 @@ exports.handler = async (event, _context) => {
             }
 
         }
-       await db.delete(params).promise()
+       await db.delete(params).promise();
+
+       return{
+        statusCode:200,
+        headers:utils.getHeaders()
+       }
 
     } catch (error) {
         return {
