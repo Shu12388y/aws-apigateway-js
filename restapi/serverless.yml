@@ -38,14 +38,54 @@ provider:
 functions:
   add-note:
     handler: api/addNote.handler
+    description: POST add Note
+    events:
+      - http: 
+          path: note
+          method: post
+          cors:
+            origin: "*"
+            headers: ${self:custom.allowHeaders}
   get-note:
     handler: api/getNote.handler
+    description: Get Note
+    events:
+      - http: 
+          path: note/n/{note_id}
+          method: get
+          cors:
+            origin: "*"
+            headers: ${self:custom.allowHeaders}
   get-notes:
     handler: api/getNotes.handler
+    description: Get Notes
+    events:
+      - http: 
+          path: note
+          method: get
+          cors:
+            origin: "*"
+            headers: ${self:custom.allowHeaders}
   delete-note:
     handler: api/deleteNote.handler
+    description: Delete Note
+    events:
+      - http: 
+          path: note/t/{timestamp}
+          method: delete
+          cors:
+            origin: "*"
+            headers: ${self:custom.allowHeaders}
   update-note:
     handler: api/updateNote.handler
+    description: Update Note
+    events:
+      - http: 
+          path: note
+          method: patch
+          cors:
+            origin: "*"
+            headers: ${self:custom.allowHeaders}
 
 
 resources:
